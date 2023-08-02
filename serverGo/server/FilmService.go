@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	pb "film_grpc/proto"
 	"film_grpc/serverGo/initializers"
 	"film_grpc/serverGo/models"
@@ -40,12 +41,14 @@ func (*Server) GetAllFilms(ctx context.Context, in *pb.NoParams) (*pb.GetFilmRes
 	}, nil
 }
 
-//func (*Server) GetFilmById(context.Context, *pb.ID) (*pb.Film, error) {
-//	var Film []*models.Film
-//	res := initializers.DB.Preload("Genres").Find(&Film, "ID = ?", pb.ID{})
-//	if res.RowsAffected
-//
-//}
+func (*Server) GetFilmById(context.Context, *pb.ID) (*pb.Film, error) {
+	var Film *models.Film
+	res := initializers.DB.Preload("Genres").Find(&Film, "ID = ?", pb.ID{})
+	if res.RowsAffected == 0 {
+		return nil, errors.New("Фильм не найден")
+	}
+	return convertToPbFilm(Film), nil
+}
 
 func convertGenreToGenreResponse(genres []*models.Genre) []*pb.Genre {
 	var genreResponses []*pb.Genre
@@ -78,14 +81,18 @@ func convertToPbFilms(films []*models.Film) []*pb.Film {
 	var pbFilms []*pb.Film
 
 	for _, film := range films {
-		pbFilm := &pb.Film{
-			ID:             film.ID,
-			FilmName:       film.FilmName,
-			ProductionYear: film.ProductionYear,
-			Genres:         convertToPbGenres(film.Genres),
-		}
+		pbFilm := convertToPbFilm(film)
 		pbFilms = append(pbFilms, pbFilm)
 	}
 
 	return pbFilms
+}
+
+func convertToPbFilm(film *models.Film) *pb.Film {
+	return &pb.Film{
+		ID:             film.ID,
+		FilmName:       film.FilmName,
+		ProductionYear: film.ProductionYear,
+		Genres:         convertToPbGenres(film.Genres),
+	}
 }
