@@ -25,7 +25,7 @@ type FilmGenreServiceClient interface {
 	CreateFilm(ctx context.Context, in *FilmData, opts ...grpc.CallOption) (*Film, error)
 	GetAllFilms(ctx context.Context, in *NoParams, opts ...grpc.CallOption) (*GetFilmResponse, error)
 	GetFilmById(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Film, error)
-	UpDateFilm(ctx context.Context, in *ID, opts ...grpc.CallOption) (*OperationStatus, error)
+	UpDateFilm(ctx context.Context, in *InfoFilmUpdate, opts ...grpc.CallOption) (*OperationStatus, error)
 	DeleteFilm(ctx context.Context, in *ID, opts ...grpc.CallOption) (*OperationStatus, error)
 	CreateGenre(ctx context.Context, in *Genre, opts ...grpc.CallOption) (*Genre, error)
 	GetGenreIdsByName(ctx context.Context, in *Genre, opts ...grpc.CallOption) (*GenreIds, error)
@@ -68,7 +68,7 @@ func (c *filmGenreServiceClient) GetFilmById(ctx context.Context, in *ID, opts .
 	return out, nil
 }
 
-func (c *filmGenreServiceClient) UpDateFilm(ctx context.Context, in *ID, opts ...grpc.CallOption) (*OperationStatus, error) {
+func (c *filmGenreServiceClient) UpDateFilm(ctx context.Context, in *InfoFilmUpdate, opts ...grpc.CallOption) (*OperationStatus, error) {
 	out := new(OperationStatus)
 	err := c.cc.Invoke(ctx, "/filmGenre_service.FilmGenreService/UpDateFilm", in, out, opts...)
 	if err != nil {
@@ -129,7 +129,7 @@ type FilmGenreServiceServer interface {
 	CreateFilm(context.Context, *FilmData) (*Film, error)
 	GetAllFilms(context.Context, *NoParams) (*GetFilmResponse, error)
 	GetFilmById(context.Context, *ID) (*Film, error)
-	UpDateFilm(context.Context, *ID) (*OperationStatus, error)
+	UpDateFilm(context.Context, *InfoFilmUpdate) (*OperationStatus, error)
 	DeleteFilm(context.Context, *ID) (*OperationStatus, error)
 	CreateGenre(context.Context, *Genre) (*Genre, error)
 	GetGenreIdsByName(context.Context, *Genre) (*GenreIds, error)
@@ -151,7 +151,7 @@ func (UnimplementedFilmGenreServiceServer) GetAllFilms(context.Context, *NoParam
 func (UnimplementedFilmGenreServiceServer) GetFilmById(context.Context, *ID) (*Film, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFilmById not implemented")
 }
-func (UnimplementedFilmGenreServiceServer) UpDateFilm(context.Context, *ID) (*OperationStatus, error) {
+func (UnimplementedFilmGenreServiceServer) UpDateFilm(context.Context, *InfoFilmUpdate) (*OperationStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpDateFilm not implemented")
 }
 func (UnimplementedFilmGenreServiceServer) DeleteFilm(context.Context, *ID) (*OperationStatus, error) {
@@ -237,7 +237,7 @@ func _FilmGenreService_GetFilmById_Handler(srv interface{}, ctx context.Context,
 }
 
 func _FilmGenreService_UpDateFilm_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ID)
+	in := new(InfoFilmUpdate)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -249,7 +249,7 @@ func _FilmGenreService_UpDateFilm_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/filmGenre_service.FilmGenreService/UpDateFilm",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FilmGenreServiceServer).UpDateFilm(ctx, req.(*ID))
+		return srv.(FilmGenreServiceServer).UpDateFilm(ctx, req.(*InfoFilmUpdate))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -53,12 +53,9 @@ message Genre {
   string GenreName = 2;
 }
 
-message GenreResponse {
-  Genre genre = 1;
-}
 
 message GetGenresResponse {
-  repeated GenreResponse genres = 1;
+  repeated Genre genres = 1;
 }
 
 message OperationStatus {

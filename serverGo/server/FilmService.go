@@ -41,13 +41,38 @@ func (*Server) GetAllFilms(ctx context.Context, in *pb.NoParams) (*pb.GetFilmRes
 	}, nil
 }
 
-func (*Server) GetFilmById(context.Context, *pb.ID) (*pb.Film, error) {
+func (*Server) GetFilmById(ctx context.Context, in *pb.ID) (*pb.Film, error) {
 	var Film *models.Film
-	res := initializers.DB.Preload("Genres").Find(&Film, "ID = ?", pb.ID{})
+
+	res := initializers.DB.Preload("Genres").Find(&Film, "ID = ?", in.GetID())
 	if res.RowsAffected == 0 {
-		return nil, errors.New("Фильм не найден")
+		return nil, errors.New("фильм не найден")
 	}
 	return convertToPbFilm(Film), nil
+}
+func (*Server) UpDateFilm(ctx context.Context, in *pb.InfoFilmUpdate) (*pb.OperationStatus, error) {
+	var film *models.Film
+
+	res := initializers.DB.Model(&film).Where("id = ?", in.ID).Updates(models.Film{FilmName: in.FilmName, ProductionYear: in.ProductionYear})
+
+	if res.RowsAffected == 0 {
+		return nil, errors.New("фильм не найден")
+	}
+	return &pb.OperationStatus{
+		OperationStatus: "фильм обновлен успешно"}, nil
+}
+
+func (*Server) DeleteFilm(ctx context.Context, in *pb.ID) (*pb.OperationStatus, error) {
+	var film *models.Film
+
+	res := initializers.DB.Where("id = ?", in.ID).Delete(&film)
+	if res.RowsAffected == 0 {
+		return nil, errors.New("фильм не найден")
+	}
+
+	return &pb.OperationStatus{
+		OperationStatus: "фильм удален успешно"}, nil
+
 }
 
 func convertGenreToGenreResponse(genres []*models.Genre) []*pb.Genre {
@@ -61,20 +86,6 @@ func convertGenreToGenreResponse(genres []*models.Genre) []*pb.Genre {
 	}
 
 	return genreResponses
-}
-
-func convertToPbGenres(genres []*models.Genre) []*pb.Genre {
-	var pbGenres []*pb.Genre
-
-	for _, genre := range genres {
-		pbGenre := &pb.Genre{
-			ID:        genre.ID,
-			GenreName: genre.GenreName,
-		}
-		pbGenres = append(pbGenres, pbGenre)
-	}
-
-	return pbGenres
 }
 
 func convertToPbFilms(films []*models.Film) []*pb.Film {
