@@ -1,10 +1,8 @@
 package models
 
-import "gorm.io/gorm"
-
 type Film struct {
-	gorm.Model
+	ID             uint64 `gorm:"primary_key;autoIncrement;unique"`
 	FilmName       string `gorm:"size:64"`
-	ProductionYear uint16
+	ProductionYear uint32
 	Genres         []*Genre `gorm:"many2many:FilmGenre;constraint:OnDelete:CASCADE"`
 }

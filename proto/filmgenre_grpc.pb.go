@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v4.23.4
-// source: proto/filmGenre.proto
+// source: proto/filmgenre.proto
 
 package proto
 
@@ -22,13 +22,13 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FilmGenreServiceClient interface {
-	CreateFilm(ctx context.Context, in *FilmData, opts ...grpc.CallOption) (*FilmResponse, error)
+	CreateFilm(ctx context.Context, in *FilmData, opts ...grpc.CallOption) (*Film, error)
 	GetAllFilms(ctx context.Context, in *NoParams, opts ...grpc.CallOption) (*GetFilmResponse, error)
-	GetFilmById(ctx context.Context, in *ID, opts ...grpc.CallOption) (*FilmResponse, error)
+	GetFilmById(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Film, error)
 	UpDateFilm(ctx context.Context, in *ID, opts ...grpc.CallOption) (*OperationStatus, error)
 	DeleteFilm(ctx context.Context, in *ID, opts ...grpc.CallOption) (*OperationStatus, error)
-	CreateGenre(ctx context.Context, in *GenreData, opts ...grpc.CallOption) (*GenreResponse, error)
-	GetGenreIdsByName(ctx context.Context, in *GenreData, opts ...grpc.CallOption) (*GenreIds, error)
+	CreateGenre(ctx context.Context, in *Genre, opts ...grpc.CallOption) (*Genre, error)
+	GetGenreIdsByName(ctx context.Context, in *Genre, opts ...grpc.CallOption) (*GenreIds, error)
 	GetAllGenres(ctx context.Context, in *NoParams, opts ...grpc.CallOption) (*GetGenresResponse, error)
 	DeleteGenre(ctx context.Context, in *ID, opts ...grpc.CallOption) (*OperationStatus, error)
 }
@@ -41,8 +41,8 @@ func NewFilmGenreServiceClient(cc grpc.ClientConnInterface) FilmGenreServiceClie
 	return &filmGenreServiceClient{cc}
 }
 
-func (c *filmGenreServiceClient) CreateFilm(ctx context.Context, in *FilmData, opts ...grpc.CallOption) (*FilmResponse, error) {
-	out := new(FilmResponse)
+func (c *filmGenreServiceClient) CreateFilm(ctx context.Context, in *FilmData, opts ...grpc.CallOption) (*Film, error) {
+	out := new(Film)
 	err := c.cc.Invoke(ctx, "/filmGenre_service.FilmGenreService/CreateFilm", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -59,8 +59,8 @@ func (c *filmGenreServiceClient) GetAllFilms(ctx context.Context, in *NoParams, 
 	return out, nil
 }
 
-func (c *filmGenreServiceClient) GetFilmById(ctx context.Context, in *ID, opts ...grpc.CallOption) (*FilmResponse, error) {
-	out := new(FilmResponse)
+func (c *filmGenreServiceClient) GetFilmById(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Film, error) {
+	out := new(Film)
 	err := c.cc.Invoke(ctx, "/filmGenre_service.FilmGenreService/GetFilmById", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -86,8 +86,8 @@ func (c *filmGenreServiceClient) DeleteFilm(ctx context.Context, in *ID, opts ..
 	return out, nil
 }
 
-func (c *filmGenreServiceClient) CreateGenre(ctx context.Context, in *GenreData, opts ...grpc.CallOption) (*GenreResponse, error) {
-	out := new(GenreResponse)
+func (c *filmGenreServiceClient) CreateGenre(ctx context.Context, in *Genre, opts ...grpc.CallOption) (*Genre, error) {
+	out := new(Genre)
 	err := c.cc.Invoke(ctx, "/filmGenre_service.FilmGenreService/CreateGenre", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (c *filmGenreServiceClient) CreateGenre(ctx context.Context, in *GenreData,
 	return out, nil
 }
 
-func (c *filmGenreServiceClient) GetGenreIdsByName(ctx context.Context, in *GenreData, opts ...grpc.CallOption) (*GenreIds, error) {
+func (c *filmGenreServiceClient) GetGenreIdsByName(ctx context.Context, in *Genre, opts ...grpc.CallOption) (*GenreIds, error) {
 	out := new(GenreIds)
 	err := c.cc.Invoke(ctx, "/filmGenre_service.FilmGenreService/GetGenreIdsByName", in, out, opts...)
 	if err != nil {
@@ -126,13 +126,13 @@ func (c *filmGenreServiceClient) DeleteGenre(ctx context.Context, in *ID, opts .
 // All implementations must embed UnimplementedFilmGenreServiceServer
 // for forward compatibility
 type FilmGenreServiceServer interface {
-	CreateFilm(context.Context, *FilmData) (*FilmResponse, error)
+	CreateFilm(context.Context, *FilmData) (*Film, error)
 	GetAllFilms(context.Context, *NoParams) (*GetFilmResponse, error)
-	GetFilmById(context.Context, *ID) (*FilmResponse, error)
+	GetFilmById(context.Context, *ID) (*Film, error)
 	UpDateFilm(context.Context, *ID) (*OperationStatus, error)
 	DeleteFilm(context.Context, *ID) (*OperationStatus, error)
-	CreateGenre(context.Context, *GenreData) (*GenreResponse, error)
-	GetGenreIdsByName(context.Context, *GenreData) (*GenreIds, error)
+	CreateGenre(context.Context, *Genre) (*Genre, error)
+	GetGenreIdsByName(context.Context, *Genre) (*GenreIds, error)
 	GetAllGenres(context.Context, *NoParams) (*GetGenresResponse, error)
 	DeleteGenre(context.Context, *ID) (*OperationStatus, error)
 	mustEmbedUnimplementedFilmGenreServiceServer()
@@ -142,13 +142,13 @@ type FilmGenreServiceServer interface {
 type UnimplementedFilmGenreServiceServer struct {
 }
 
-func (UnimplementedFilmGenreServiceServer) CreateFilm(context.Context, *FilmData) (*FilmResponse, error) {
+func (UnimplementedFilmGenreServiceServer) CreateFilm(context.Context, *FilmData) (*Film, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFilm not implemented")
 }
 func (UnimplementedFilmGenreServiceServer) GetAllFilms(context.Context, *NoParams) (*GetFilmResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllFilms not implemented")
 }
-func (UnimplementedFilmGenreServiceServer) GetFilmById(context.Context, *ID) (*FilmResponse, error) {
+func (UnimplementedFilmGenreServiceServer) GetFilmById(context.Context, *ID) (*Film, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFilmById not implemented")
 }
 func (UnimplementedFilmGenreServiceServer) UpDateFilm(context.Context, *ID) (*OperationStatus, error) {
@@ -157,10 +157,10 @@ func (UnimplementedFilmGenreServiceServer) UpDateFilm(context.Context, *ID) (*Op
 func (UnimplementedFilmGenreServiceServer) DeleteFilm(context.Context, *ID) (*OperationStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteFilm not implemented")
 }
-func (UnimplementedFilmGenreServiceServer) CreateGenre(context.Context, *GenreData) (*GenreResponse, error) {
+func (UnimplementedFilmGenreServiceServer) CreateGenre(context.Context, *Genre) (*Genre, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateGenre not implemented")
 }
-func (UnimplementedFilmGenreServiceServer) GetGenreIdsByName(context.Context, *GenreData) (*GenreIds, error) {
+func (UnimplementedFilmGenreServiceServer) GetGenreIdsByName(context.Context, *Genre) (*GenreIds, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGenreIdsByName not implemented")
 }
 func (UnimplementedFilmGenreServiceServer) GetAllGenres(context.Context, *NoParams) (*GetGenresResponse, error) {
@@ -273,7 +273,7 @@ func _FilmGenreService_DeleteFilm_Handler(srv interface{}, ctx context.Context, 
 }
 
 func _FilmGenreService_CreateGenre_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GenreData)
+	in := new(Genre)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -285,13 +285,13 @@ func _FilmGenreService_CreateGenre_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/filmGenre_service.FilmGenreService/CreateGenre",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FilmGenreServiceServer).CreateGenre(ctx, req.(*GenreData))
+		return srv.(FilmGenreServiceServer).CreateGenre(ctx, req.(*Genre))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _FilmGenreService_GetGenreIdsByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GenreData)
+	in := new(Genre)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -303,7 +303,7 @@ func _FilmGenreService_GetGenreIdsByName_Handler(srv interface{}, ctx context.Co
 		FullMethod: "/filmGenre_service.FilmGenreService/GetGenreIdsByName",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FilmGenreServiceServer).GetGenreIdsByName(ctx, req.(*GenreData))
+		return srv.(FilmGenreServiceServer).GetGenreIdsByName(ctx, req.(*Genre))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -389,5 +389,5 @@ var FilmGenreService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/filmGenre.proto",
+	Metadata: "proto/filmgenre.proto",
 }

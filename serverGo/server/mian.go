@@ -16,7 +16,7 @@ func init() {
 }
 
 type Server struct {
-	pb.FilmGenreServiceServer
+	pb.UnimplementedFilmGenreServiceServer
 }
 
 func main() {

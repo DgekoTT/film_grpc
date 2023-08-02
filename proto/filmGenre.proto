@@ -5,53 +5,55 @@ option go_package="./proto";
 package filmGenre_service;
 
 service FilmGenreService {
-  rpc CreateFilm(FilmData) returns (FilmResponse);
-  rpc GetAllFilms(NoParams) returns (GetFilmResponse);
-  rpc GetFilmById(ID) returns (FilmResponse);
-  rpc UpDateFilm(ID) returns (OperationStatus);
-  rpc DeleteFilm(ID) returns (OperationStatus);
+  rpc CreateFilm(FilmData) returns (Film){};
+  rpc GetAllFilms(NoParams) returns (GetFilmResponse){};
+  rpc GetFilmById(ID) returns (Film){};
+  rpc UpDateFilm(ID) returns (OperationStatus){};
+  rpc DeleteFilm(ID) returns (OperationStatus){};
 
-  rpc CreateGenre(GenreData) returns (GenreResponse);
-  rpc GetGenreIdsByName(GenreData) returns (GenreIds);
-  rpc GetAllGenres(NoParams) returns (GetGenresResponse);
-  rpc DeleteGenre(ID) returns (OperationStatus);
+  rpc CreateGenre(Genre) returns (Genre){};
+  rpc GetGenreIdsByName(Genre) returns (GenreIds){};
+  rpc GetAllGenres(NoParams) returns (GetGenresResponse){};
+  rpc DeleteGenre(ID) returns (OperationStatus){};
 }
 
 message NoParams {}
 
 message FilmData {
-  string FilmName = 1;
-  uint32 ProductionYear = 2;
-  string Genres = 3;
-}
-
-
-message FilmResponse {
   uint64 ID = 1;
   string FilmName = 2;
   uint32 ProductionYear = 3;
-  repeated GenreResponse Genres = 4;
+  string Genres = 4;
 }
 
+
+message Film {
+  uint64 ID = 1;
+  string FilmName = 2;
+  uint32 ProductionYear = 3;
+  repeated  Genre Genres = 4;
+}
+
+
 message GetFilmResponse {
-  repeated FilmResponse Films = 1;
+  repeated Film films = 1;
 }
 
 message GenreIds {
   repeated uint64 IDs = 1;
 }
 
-message GenreData {
-  string GenreName = 1;
+message Genre {
+  uint32 ID = 1;
+  string GenreName = 2;
 }
 
 message GenreResponse {
-  uint32 ID = 1;
-  string GenreName = 5;
+  Genre genre = 1;
 }
 
 message GetGenresResponse {
-  repeated GenreResponse Genres = 1;
+  repeated GenreResponse genres = 1;
 }
 
 message OperationStatus {

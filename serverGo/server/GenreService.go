@@ -1,11 +1,10 @@
-package service
+package main
 
 import (
 	"context"
-	"film_grpc/proto"
+	pb "film_grpc/proto"
 	"film_grpc/serverGo/initializers"
 	"film_grpc/serverGo/models"
-	"google.golang.org/grpc"
 	"log"
 	"strings"
 )
@@ -21,31 +20,31 @@ func GetGenreIdsByName(name string) []*models.Genre {
 	return genreIds
 }
 
-func (*server) CreateGenre(ctx context.Context, in *proto.GenreData, opts ...grpc.CallOption) (*proto.GenreResponse, error) {
+func (*Server) CreateGenre(ctx context.Context, in *pb.Genre) (*pb.Genre, error) {
 
 	genreName := in.GetGenreName()
-
-	//genre := models.Genre{GenreName: genreName}
-	//result := initializers.DB.Create(&genre)
-	//if result.Error != nil {
-	//	return &proto.GenreResponse{}, result.Error
-	//}
-	//
-	//response := &proto.GenreResponse{
-	//	ID:        uint32(genre.ID),
-	//	GenreName: genre.GenreName,
-	//}
-	//return response, nil
+	log.Print(genreName)
 
 	genre := models.Genre{GenreName: genreName}
 	result := initializers.DB.Create(&genre)
 	if result.Error != nil {
-		return &proto.GenreResponse{}, result.Error
+		return &pb.Genre{}, result.Error
 	}
 
-	return &proto.GenreResponse{
-		ID:        uint32(genre.ID),
+	return &pb.Genre{
+		ID:        genre.ID,
 		GenreName: genre.GenreName,
 	}, nil
 
 }
+
+//func (*Server) GetAllGenres(ctx context.Context, in *pb.NoParams) (*pb.GetGenresResponse, error) {
+//	var genres []*pb.GenreResponse
+//	err := initializers.DB.Preload("Genres")Find(&genres).Error
+//	if err != nil {
+//		return &pb.GetGenresResponse{}, err
+//	}
+//	return &pb.GetGenresResponse{
+//		Genres: genres,
+//	}, nil
+//}
