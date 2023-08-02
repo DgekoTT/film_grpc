@@ -8,7 +8,7 @@ service FilmGenreService {
   rpc CreateFilm(FilmData) returns (Film){};
   rpc GetAllFilms(NoParams) returns (GetFilmResponse){};
   rpc GetFilmById(ID) returns (Film){};
-  rpc UpDateFilm(ID) returns (OperationStatus){};
+  rpc UpDateFilm(InfoFilmUpdate) returns (OperationStatus){};
   rpc DeleteFilm(ID) returns (OperationStatus){};
 
   rpc CreateGenre(Genre) returns (Genre){};
@@ -26,6 +26,11 @@ message FilmData {
   string Genres = 4;
 }
 
+message InfoFilmUpdate {
+  uint64 ID = 1;
+  string FilmName = 2;
+  uint32 ProductionYear = 3;
+}
 
 message Film {
   uint64 ID = 1;
